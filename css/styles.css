@@ -1,0 +1,3434 @@
+﻿:root {
+    /* Warm spiritual palette */
+    --bg-deep: #1a1520;
+    --bg-surface: #241e2a;
+    --bg-elevated: #2e2636;
+    --bg-glow: #3a2f42;
+    
+    /* Warm golden/amber tones */
+    --gold-light: #f4d03f;
+    --gold-primary: #e8b923;
+    --gold-warm: #d4a012;
+    --gold-deep: #b8860b;
+    --amber: #ffbf00;
+    --copper: #da8a67;
+    --rose: #e8a0a0;
+    
+    /* Spiritual accent colors */
+    --violet-soft: #9d8cbc;
+    --violet-deep: #6b5b8c;
+    --teal-soft: #7ec8c8;
+    --teal-deep: #4a9999;
+    
+    /* Text */
+    --text-primary: #f5f0e8;
+    --text-secondary: #c9bfb0;
+    --text-muted: #8a7f72;
+    
+    /* Phase colors - warm and harmonious */
+    --phase-settling: #4a6b6b;
+    --phase-deepening: #5a5a7a;
+    --phase-peak: #8b5a6b;
+    --phase-softening: #7a6b4a;
+    --phase-return: #5a4a4a;
+    
+    /* Glows */
+    --glow-gold: rgba(232, 185, 35, 0.4);
+    --glow-soft: rgba(232, 185, 35, 0.15);
+    --glow-violet: rgba(157, 140, 188, 0.3);
+    
+    /* iOS Safe Areas */
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    
+    --touch-min: 48px;
+    --touch-comfortable: 56px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    min-height: 100%;
+    overscroll-behavior: none;
+    -webkit-user-select: none;
+    user-select: none;
+    position: fixed;
+    width: 100%;
+}
+
+/* Animated gradient background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(ellipse at 30% 20%, rgba(232, 185, 35, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(157, 140, 188, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(126, 200, 200, 0.04) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+    animation: bgPulse 20s ease-in-out infinite;
+}
+
+@keyframes bgPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Sacred geometry pattern overlay */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='20' fill='none' stroke='%23e8b923' stroke-width='0.3' opacity='0.08'/%3E%3Ccircle cx='30' cy='30' r='10' fill='none' stroke='%23e8b923' stroke-width='0.3' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: calc(1rem + var(--safe-top)) calc(1.5rem + var(--safe-right)) calc(1rem + var(--safe-bottom)) calc(1.5rem + var(--safe-left));
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Compact Header Bar with Timer, Presets & Controls - hidden on phones, shown on tablets */
+.header-bar {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-elevated) 100%);
+    border-radius: 16px;
+    padding: 0.6rem 1rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid rgba(232, 185, 35, 0.15);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.header-left h1 {
+    font-family: 'Philosopher', serif;
+    font-weight: 400;
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-warm) 50%, var(--copper) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.header-left .subtitle {
+    font-size: 0.55rem;
+    color: var(--text-muted);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-weight: 300;
+}
+
+/* Compact Timer in Header */
+.timer-compact {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--bg-deep);
+    padding: 0.5rem 1rem;
+    border-radius: 30px;
+    border: 1px solid rgba(232, 185, 35, 0.25);
+}
+
+.timer-compact-display {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 500;
+    background: linear-gradient(180deg, var(--text-primary) 0%, var(--gold-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.05em;
+    min-width: 80px;
+    text-align: center;
+}
+
+.timer-compact-label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.1rem;
+}
+
+.timer-compact-mode {
+    font-size: 0.65rem;
+    color: var(--gold-primary);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.timer-compact-status {
+    font-size: 0.55rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+}
+
+/* Header Controls Section - Preset & Buttons */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.header-preset-select {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    min-height: 44px;
+    background: var(--bg-deep);
+    border: 1px solid rgba(232, 185, 35, 0.25);
+    color: var(--text-primary);
+    border-radius: 10px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23e8b923'%3E%3Cpath d='M3 4l3 3 3-3'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    padding-right: 1.75rem;
+    max-width: 150px;
+}
+
+.header-btn {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.5rem 1rem;
+    min-height: 44px;
+    min-width: 80px;
+    border: 1px solid var(--gold-deep);
+    background: transparent;
+    color: var(--text-primary);
+    border-radius: 22px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+}
+
+.header-btn:active {
+    transform: scale(0.95);
+}
+
+.header-btn-primary {
+    background: linear-gradient(135deg, var(--gold-warm), var(--gold-deep));
+    color: var(--bg-deep);
+    border: none;
+    min-width: 100px;
+    box-shadow: 0 3px 15px var(--glow-soft);
+}
+
+.header-btn-primary:active {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-warm));
+}
+
+.header-btn-stop {
+    border-color: var(--copper);
+    color: var(--copper);
+}
+
+.header-btn-stop:active {
+    background: rgba(218, 138, 103, 0.2);
+}
+
+/* Audio Status in Header */
+.header-status {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.header-audio-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    transition: all 0.3s;
+}
+
+.header-audio-dot.active {
+    background: var(--teal-soft);
+    box-shadow: 0 0 12px var(--teal-soft);
+    animation: audioPulse 2s ease-in-out infinite;
+}
+
+/* Legacy header - hide on tablets */
+header {
+    text-align: center;
+    margin-bottom: 0.75rem;
+    flex-shrink: 0;
+}
+
+h1 {
+    font-family: 'Philosopher', serif;
+    font-weight: 400;
+    font-size: 1.8rem;
+    letter-spacing: 0.2em;
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-warm) 50%, var(--copper) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+    text-shadow: 0 0 30px var(--glow-gold);
+}
+
+.subtitle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    font-weight: 300;
+}
+
+/* Main Timer Display - for phones */
+.timer-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0;
+    flex-shrink: 0;
+}
+
+.timer-ring-container {
+    position: relative;
+    width: min(42vmin, 280px);
+    height: min(42vmin, 280px);
+}
+
+.timer-ring {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+    filter: drop-shadow(0 0 20px var(--glow-gold));
+}
+
+.timer-ring-bg {
+    fill: none;
+    stroke: var(--bg-elevated);
+    stroke-width: 3;
+}
+
+.timer-ring-progress {
+    fill: none;
+    stroke: url(#goldGradient);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 880;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+.timer-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 85%;
+}
+
+.timer-display {
+    font-family: 'Quicksand', sans-serif;
+    font-size: clamp(2.8rem, 10vmin, 4rem);
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    background: linear-gradient(180deg, var(--text-primary) 0%, var(--gold-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+}
+
+.phase-name {
+    font-family: 'Philosopher', serif;
+    font-size: clamp(1rem, 3.5vmin, 1.3rem);
+    font-weight: 400;
+    color: var(--gold-primary);
+    margin-top: 0.4rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.phase-guidance {
+    font-size: clamp(0.8rem, 2.2vmin, 0.9rem);
+    color: var(--text-secondary);
+    margin-top: 0.2rem;
+    font-weight: 300;
+    font-style: italic;
+}
+
+/* Breathing Circle with lotus pattern */
+.breath-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 92%;
+    height: 92%;
+    border: 1px solid var(--gold-deep);
+    border-radius: 50%;
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.breath-circle.active {
+    animation: breathe 10s ease-in-out infinite;
+}
+
+@keyframes breathe {
+    0%, 100% { transform: translate(-50%, -50%) scale(0.94); opacity: 0.15; border-color: var(--gold-deep); }
+    50% { transform: translate(-50%, -50%) scale(1.06); opacity: 0.4; border-color: var(--gold-light); }
+}
+
+/* ========================================
+   VISUAL TIMELINE - Clear Phase Display
+   ======================================== */
+
+.timeline-section {
+    background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-elevated) 100%);
+    border-radius: 16px;
+    padding: 1rem;
+    margin: 0.75rem 0;
+    border: 1px solid rgba(232, 185, 35, 0.15);
+    box-shadow: 
+        0 4px 20px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+    flex-shrink: 0;
+}
+
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(232, 185, 35, 0.1);
+}
+
+.timeline-title {
+    font-family: 'Philosopher', serif;
+    font-size: 0.85rem;
+    color: var(--gold-primary);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+.timeline-duration {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.timeline-track {
+    position: relative;
+    height: 8px;
+    background: var(--bg-deep);
+    border-radius: 4px;
+    margin: 1rem 0 0.5rem;
+    overflow: visible;
+}
+
+.timeline-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-deep), var(--gold-primary), var(--gold-light));
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px var(--glow-gold);
+}
+
+.timeline-phases {
+    display: flex;
+    position: relative;
+    margin-top: 0.25rem;
+}
+
+.timeline-phase {
+    flex: 1;
+    position: relative;
+    padding-top: 0.5rem;
+}
+
+.timeline-phase::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 0;
+    width: 2px;
+    height: 16px;
+    background: var(--bg-glow);
+    border-radius: 1px;
+}
+
+.timeline-phase:first-child::before {
+    display: none;
+}
+
+.timeline-phase.active::before {
+    background: var(--gold-primary);
+    box-shadow: 0 0 8px var(--glow-gold);
+}
+
+.timeline-phase-name {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+}
+
+.timeline-phase.active .timeline-phase-name {
+    color: var(--gold-primary);
+}
+
+.timeline-phase.complete .timeline-phase-name {
+    color: var(--text-secondary);
+}
+
+.timeline-phase-time {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+    font-weight: 500;
+}
+
+.timeline-phase.active .timeline-phase-time {
+    color: var(--gold-light);
+}
+
+/* Current phase indicator */
+.timeline-current {
+    position: absolute;
+    top: -20px;
+    transform: translateX(-50%);
+    transition: left 0.5s ease;
+}
+
+.timeline-current-dot {
+    width: 12px;
+    height: 12px;
+    background: var(--gold-light);
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--glow-gold), 0 0 30px var(--glow-gold);
+    animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.7; }
+}
+
+/* Phase detail cards */
+.phase-cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.4rem;
+    margin-top: 0.75rem;
+}
+
+.phase-card {
+    background: var(--bg-deep);
+    border-radius: 8px;
+    padding: 0.5rem 0.4rem;
+    text-align: center;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+    opacity: 0.5;
+}
+
+.phase-card.active {
+    background: linear-gradient(135deg, var(--bg-elevated), var(--bg-glow));
+    border-color: var(--gold-warm);
+    opacity: 1;
+    box-shadow: 0 0 15px var(--glow-soft);
+}
+
+.phase-card.complete {
+    opacity: 0.7;
+    border-color: rgba(232, 185, 35, 0.2);
+}
+
+.phase-card-icon {
+    font-size: 1.2rem;
+    margin-bottom: 0.2rem;
+}
+
+.phase-card-name {
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.15rem;
+}
+
+.phase-card.active .phase-card-name {
+    color: var(--gold-light);
+}
+
+.phase-card-duration {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.phase-card.active .phase-card-duration {
+    color: var(--text-primary);
+}
+
+.phase-card-guidance {
+    font-size: 0.55rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+    font-style: italic;
+    line-height: 1.3;
+    display: none;
+}
+
+.phase-card.active .phase-card-guidance {
+    display: block;
+    color: var(--text-secondary);
+}
+
+/* Controls Section */
+.controls-section {
+    background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-elevated) 100%);
+    border-radius: 20px;
+    padding: 1rem;
+    border: 1px solid rgba(232, 185, 35, 0.12);
+    box-shadow: 
+        0 8px 32px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+    flex-shrink: 0;
+}
+
+.controls-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.controls-row:last-child {
+    margin-bottom: 0;
+}
+
+/* iOS Audio Unlock Button */
+.audio-unlock {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(26, 21, 32, 0.98), rgba(36, 30, 42, 0.98));
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.audio-unlock.visible {
+    display: flex;
+}
+
+.audio-unlock-icon {
+    font-size: 3rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.audio-unlock-text {
+    font-family: 'Philosopher', serif;
+    font-size: 1.3rem;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 0 2rem;
+    letter-spacing: 0.1em;
+}
+
+.audio-unlock-btn {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-warm));
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 
+        0 0 40px var(--glow-gold),
+        0 0 80px var(--glow-soft);
+}
+
+.audio-unlock-btn:active {
+    transform: scale(0.95);
+}
+
+.audio-unlock-btn svg {
+    width: 40px;
+    height: 40px;
+    fill: var(--bg-deep);
+}
+
+.audio-unlock-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: -1rem;
+}
+
+/* Buttons */
+.btn {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.9rem 1.8rem;
+    min-height: var(--touch-comfortable);
+    min-width: 130px;
+    border: 1px solid var(--gold-deep);
+    background: transparent;
+    color: var(--text-primary);
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    touch-action: manipulation;
+}
+
+.btn:active {
+    transform: scale(0.97);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--gold-warm), var(--gold-deep));
+    color: var(--bg-deep);
+    border: none;
+    min-width: 160px;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 20px var(--glow-soft);
+}
+
+.btn-primary:active {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-warm));
+}
+
+.btn-stop {
+    border-color: var(--copper);
+    color: var(--copper);
+}
+
+.btn-stop:active {
+    background: rgba(218, 138, 103, 0.2);
+}
+
+/* Select Dropdowns */
+.select-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex: 1;
+    min-width: 145px;
+    max-width: 200px;
+}
+
+.select-label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding-left: 0.8rem;
+}
+
+select {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.8rem 1rem;
+    min-height: var(--touch-comfortable);
+    background: var(--bg-deep);
+    border: 1px solid rgba(232, 185, 35, 0.25);
+    color: var(--text-primary);
+    border-radius: 12px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23e8b923'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+}
+
+select:focus {
+    outline: none;
+    border-color: var(--gold-primary);
+    box-shadow: 0 0 15px var(--glow-soft);
+}
+
+/* Toggle Switches */
+.toggles-row {
+    display: flex;
+    gap: 1.25rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.toggle-group {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem;
+}
+
+.toggle-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+}
+
+.toggle {
+    position: relative;
+    width: 52px;
+    height: 28px;
+    background: var(--bg-deep);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background 0.3s;
+    border: 1px solid rgba(232, 185, 35, 0.2);
+    touch-action: manipulation;
+}
+
+.toggle.active {
+    background: linear-gradient(90deg, var(--gold-deep), var(--gold-warm));
+    border-color: var(--gold-warm);
+}
+
+.toggle::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: var(--text-primary);
+    border-radius: 50%;
+    transition: transform 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.toggle.active::after {
+    transform: translateX(24px);
+}
+
+/* Volume Sliders - Vertical Layout for Live Performance */
+.volume-controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    padding: 0.75rem 0;
+    flex-wrap: nowrap;
+}
+
+.volume-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    min-width: 70px;
+}
+
+.volume-group.volume-master {
+    min-width: 90px;
+}
+
+.volume-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.volume-value {
+    font-size: 1rem;
+    color: var(--gold-primary);
+    min-width: 45px;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* Horizontal sliders default */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 110px;
+    height: 6px;
+    background: var(--bg-deep);
+    border-radius: 3px;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 26px;
+    height: 26px;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-warm));
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3), 0 0 10px var(--glow-soft);
+}
+
+/* Vertical Volume Sliders for Tablets/iPad - Live Performance Mode */
+.volume-slider-vertical {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 50px;
+    height: 160px;
+    background: linear-gradient(to top, var(--bg-deep), var(--bg-elevated));
+    border-radius: 25px;
+    cursor: pointer;
+    touch-action: manipulation;
+    writing-mode: vertical-lr;
+    direction: rtl;
+    border: 1px solid rgba(232, 185, 35, 0.2);
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.volume-slider-vertical::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-warm));
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.4), 0 0 15px var(--glow-soft);
+    border: 2px solid rgba(255,255,255,0.2);
+}
+
+.volume-slider-vertical::-webkit-slider-thumb:active {
+    transform: scale(1.1);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 25px var(--glow-gold);
+}
+
+.volume-slider-vertical.master-slider {
+    width: 65px;
+    height: 180px;
+    background: linear-gradient(to top, var(--bg-deep), rgba(232, 185, 35, 0.1));
+    border-color: rgba(232, 185, 35, 0.35);
+}
+
+.volume-slider-vertical.master-slider::-webkit-slider-thumb {
+    width: 56px;
+    height: 56px;
+}
+
+/* Frequency Display */
+.freq-display {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid rgba(232, 185, 35, 0.1);
+    margin-top: 0.5rem;
+}
+
+.freq-channel {
+    text-align: center;
+}
+
+.freq-channel-label {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+
+.freq-channel-value {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-warm));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.freq-channel-note {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Audio Status */
+.audio-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+}
+
+.audio-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-muted);
+}
+
+.audio-dot.active {
+    background: var(--teal-soft);
+    box-shadow: 0 0 10px var(--teal-soft);
+    animation: audioPulse 2s ease-in-out infinite;
+}
+
+@keyframes audioPulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--teal-soft); }
+    50% { opacity: 0.6; box-shadow: 0 0 20px var(--teal-soft); }
+}
+
+/* Free Mode Interval Buttons - Live Performance Optimized */
+.free-mode-panel {
+    display: none;
+    background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-elevated) 100%);
+    border-radius: 16px;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border: 1px solid rgba(232, 185, 35, 0.2);
+    box-shadow: 
+        0 4px 20px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+    flex-shrink: 0;
+    flex-grow: 1;
+}
+
+.free-mode-panel.visible {
+    display: flex;
+    flex-direction: column;
+}
+
+.free-mode-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid rgba(232, 185, 35, 0.1);
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.free-mode-title {
+    font-family: 'Philosopher', serif;
+    font-size: 0.8rem;
+    color: var(--gold-primary);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.free-mode-subtitle {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+.free-mode-secondary {
+    display: flex;
+    justify-content: center;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(232, 185, 35, 0.08);
+    margin-top: 0.5rem;
+}
+
+/* ========================================
+   LIVE EFFECTS SECTION
+   ======================================== */
+
+.effects-section {
+    background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-elevated) 100%);
+    border-radius: 16px;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    border: 1px solid rgba(232, 185, 35, 0.15);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+}
+
+.effects-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(232, 185, 35, 0.1);
+}
+
+.effects-title {
+    font-family: 'Philosopher', serif;
+    font-size: 0.85rem;
+    color: var(--gold-primary);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.effects-subtitle {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+.effects-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+}
+
+.effect-card {
+    background: var(--bg-deep);
+    border-radius: 12px;
+    padding: 0.75rem;
+    border: 1px solid rgba(232, 185, 35, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.3s ease;
+}
+
+.effect-card.active {
+    border-color: var(--gold-warm);
+    box-shadow: 0 0 20px var(--glow-soft);
+    background: linear-gradient(135deg, var(--bg-elevated), var(--bg-glow));
+}
+
+.effect-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.2rem;
+}
+
+.effect-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.05em;
+}
+
+.effect-desc {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.effect-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 0.3rem;
+}
+
+.effect-btn {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.4rem 1rem;
+    min-width: 60px;
+    background: transparent;
+    border: 1px solid rgba(232, 185, 35, 0.3);
+    color: var(--text-secondary);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.effect-btn.active {
+    background: linear-gradient(135deg, var(--gold-warm), var(--gold-deep));
+    border-color: var(--gold-light);
+    color: var(--bg-deep);
+    box-shadow: 0 0 12px var(--glow-soft);
+}
+
+.effect-btn:active {
+    transform: scale(0.95);
+}
+
+.effect-slider-group {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: 100%;
+    justify-content: center;
+}
+
+.effect-slider-label {
+    font-size: 0.55rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    min-width: 30px;
+}
+
+.effect-slider {
+    width: 60px;
+    height: 4px;
+}
+
+.effect-slider-value {
+    font-size: 0.7rem;
+    color: var(--gold-primary);
+    min-width: 25px;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Pulse Visualizer */
+.pulse-visualizer {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-elevated);
+    border: 2px solid rgba(232, 185, 35, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.3rem;
+}
+
+.pulse-visualizer.active {
+    animation: pulseEffect 1s ease-in-out infinite;
+}
+
+@keyframes pulseEffect {
+    0%, 100% { 
+        transform: scale(1); 
+        border-color: rgba(232, 185, 35, 0.2);
+        box-shadow: none;
+    }
+    50% { 
+        transform: scale(1.15); 
+        border-color: var(--gold-primary);
+        box-shadow: 0 0 15px var(--glow-gold);
+    }
+}
+
+/* Pan Visualizer */
+.pan-visualizer {
+    width: 80px;
+    height: 20px;
+    background: var(--bg-elevated);
+    border-radius: 10px;
+    position: relative;
+    margin-top: 0.3rem;
+    border: 1px solid rgba(232, 185, 35, 0.15);
+}
+
+.pan-dot {
+    width: 14px;
+    height: 14px;
+    background: var(--gold-primary);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: left 0.1s linear;
+    box-shadow: 0 0 8px var(--glow-gold);
+}
+
+/* Breath Visualizer */
+.breath-visualizer {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.3rem;
+}
+
+.breath-ring {
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(232, 185, 35, 0.3);
+    border-radius: 50%;
+    position: absolute;
+}
+
+.breath-ring.active {
+    animation: breatheRing 8s ease-in-out infinite;
+}
+
+@keyframes breatheRing {
+    0%, 100% { 
+        transform: scale(0.8); 
+        border-color: var(--teal-soft);
+        opacity: 0.5;
+    }
+    50% { 
+        transform: scale(1.2); 
+        border-color: var(--gold-primary);
+        opacity: 1;
+    }
+}
+
+.breath-text {
+    font-size: 0.55rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    z-index: 1;
+}
+
+.breath-text.inhale {
+    color: var(--teal-soft);
+}
+
+.breath-text.exhale {
+    color: var(--gold-primary);
+}
+
+/* Swell Visualizer */
+.swell-visualizer {
+    width: 80px;
+    height: 20px;
+    background: var(--bg-elevated);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 0.3rem;
+    border: 1px solid rgba(232, 185, 35, 0.15);
+}
+
+.swell-bar {
+    height: 100%;
+    width: 50%;
+    background: linear-gradient(90deg, var(--gold-deep), var(--gold-primary));
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+/* Binaural beat frequency display */
+.freq-channel-beat {
+    background: rgba(232, 185, 35, 0.08);
+    border-radius: 8px;
+    padding: 0.3rem 0.5rem;
+}
+
+.freq-channel-beat .freq-channel-value {
+    color: var(--gold-light);
+}
+
+.freq-channel-beat .freq-channel-note {
+    font-size: 0.7rem;
+    color: var(--gold-primary);
+}
+
+.interval-buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+    flex-grow: 1;
+}
+
+.interval-btn {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 1rem 0.6rem;
+    background: var(--bg-deep);
+    border: 2px solid rgba(232, 185, 35, 0.25);
+    color: var(--text-secondary);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+    touch-action: manipulation;
+    min-height: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.interval-btn:hover {
+    border-color: var(--gold-warm);
+    color: var(--text-primary);
+}
+
+.interval-btn:active {
+    transform: scale(0.92);
+    background: var(--bg-glow);
+}
+
+.interval-btn.active-left {
+    background: linear-gradient(135deg, var(--violet-deep), var(--violet-soft));
+    border-color: var(--violet-soft);
+    border-width: 3px;
+    color: var(--text-primary);
+    box-shadow: 0 0 20px var(--glow-violet);
+}
+
+.interval-btn.active-right {
+    background: linear-gradient(135deg, var(--teal-deep), var(--teal-soft));
+    border-color: var(--teal-soft);
+    border-width: 3px;
+    color: var(--text-primary);
+    box-shadow: 0 0 20px rgba(126, 200, 200, 0.4);
+}
+
+.interval-btn.active-both {
+    background: linear-gradient(135deg, var(--gold-deep), var(--gold-warm));
+    border-color: var(--gold-light);
+    border-width: 3px;
+    color: var(--bg-deep);
+    box-shadow: 0 0 20px var(--glow-gold);
+}
+
+.interval-btn-note {
+    font-size: 1.2rem;
+    font-weight: 700;
+    display: block;
+    line-height: 1.1;
+}
+
+.interval-btn-freq {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+    display: block;
+}
+
+.interval-btn.active-left .interval-btn-freq,
+.interval-btn.active-right .interval-btn-freq,
+.interval-btn.active-both .interval-btn-freq {
+    color: inherit;
+    opacity: 0.85;
+}
+
+.free-mode-controls {
+    display: flex;
+    gap: 0.6rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+
+.channel-selector {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-deep);
+    border-radius: 10px;
+}
+
+.fade-speed-control {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.4rem 0.75rem;
+    background: var(--bg-deep);
+    border-radius: 10px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.fade-speed-control:hover,
+.fade-speed-control:focus-within {
+    opacity: 1;
+}
+
+.fade-speed-label {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.fade-speed-control input[type="range"] {
+    width: 80px;
+}
+
+.fade-speed-value {
+    font-size: 0.75rem;
+    color: var(--gold-primary);
+    min-width: 35px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.channel-btn {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.6rem 1.25rem;
+    min-height: 42px;
+    background: transparent;
+    border: 2px solid rgba(232, 185, 35, 0.3);
+    color: var(--text-secondary);
+    border-radius: 21px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    touch-action: manipulation;
+}
+
+.channel-btn.active {
+    background: linear-gradient(135deg, var(--gold-warm), var(--gold-deep));
+    border-color: var(--gold-light);
+    color: var(--bg-deep);
+    box-shadow: 0 0 18px var(--glow-soft);
+}
+
+.channel-btn:active {
+    transform: scale(0.92);
+}
+
+.channel-indicator {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* Free mode timer styling - big and clear */
+.timer-display.free-mode {
+    display: block !important;
+    font-size: clamp(3.2rem, 12vmin, 5rem);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+}
+
+.timer-infinity {
+    display: none;
+    font-size: 1.2rem;
+    color: var(--gold-primary);
+    opacity: 0.8;
+    letter-spacing: 0.2em;
+    margin-bottom: 0.3rem;
+}
+
+.timer-infinity.visible {
+    display: block;
+}
+
+.free-mode-label {
+    display: none;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: -0.2rem;
+}
+
+.free-mode-label.visible {
+    display: block;
+}
+
+/* Free mode ring animation */
+.timer-ring-progress.free-mode {
+    animation: freeRingPulse 8s ease-in-out infinite;
+    stroke-dashoffset: 220 !important;
+}
+
+@keyframes freeRingPulse {
+    0%, 100% { 
+        stroke-dashoffset: 220;
+        opacity: 0.6;
+    }
+    50% { 
+        stroke-dashoffset: 440;
+        opacity: 1;
+    }
+}
+
+@media (max-width: 500px) {
+    .interval-buttons {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.3rem;
+    }
+
+    .interval-btn {
+        padding: 0.4rem 0.2rem;
+        font-size: 0.7rem;
+        min-height: 50px;
+    }
+
+    .interval-btn-note {
+        font-size: 0.8rem;
+    }
+
+    .interval-btn-freq {
+        font-size: 0.45rem;
+    }
+
+    .channel-selector {
+        flex-wrap: wrap;
+        gap: 0.3rem;
+        padding: 0.3rem;
+    }
+
+    .channel-btn {
+        font-size: 0.65rem;
+        padding: 0.35rem 0.6rem;
+        min-height: 32px;
+    }
+
+    .channel-indicator {
+        font-size: 0.55rem;
+    }
+
+    .fade-speed-control {
+        width: 100%;
+        justify-content: center;
+        padding: 0.3rem 0.4rem;
+    }
+
+    .fade-speed-control input[type="range"] {
+        width: 80px;
+    }
+
+    .fade-speed-label {
+        font-size: 0.5rem;
+    }
+
+    .fade-speed-value {
+        font-size: 0.65rem;
+    }
+}
+
+/* ========================================
+   INSTRUMENT TUNER SECTION
+   ======================================== */
+
+.tuner-section {
+    background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-elevated) 100%);
+    border-radius: 16px;
+    padding: 1rem;
+    margin-top: 0.75rem;
+    border: 1px solid rgba(232, 185, 35, 0.15);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+}
+
+.tuner-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(232, 185, 35, 0.1);
+    cursor: pointer;
+}
+
+.tuner-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.tuner-title {
+    font-family: 'Philosopher', serif;
+    font-size: 0.85rem;
+    color: var(--gold-primary);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.tuner-subtitle {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+}
+
+.tuner-collapse-icon {
+    font-size: 1.2rem;
+    color: var(--gold-primary);
+    transition: transform 0.3s ease;
+}
+
+.tuner-section.collapsed .tuner-collapse-icon {
+    transform: rotate(-90deg);
+}
+
+.tuner-section.collapsed .tuner-content {
+    display: none;
+}
+
+.tuner-controls-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.tuner-select-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 100px;
+}
+
+.tuner-select-label {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.tuner-select {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    min-height: 40px;
+    background: var(--bg-deep);
+    border: 1px solid rgba(232, 185, 35, 0.25);
+    color: var(--text-primary);
+    border-radius: 10px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23e8b923'%3E%3Cpath d='M3 4l3 3 3-3'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    padding-right: 1.75rem;
+    text-align: center;
+}
+
+.tuner-select:focus {
+    outline: none;
+    border-color: var(--gold-primary);
+    box-shadow: 0 0 15px var(--glow-soft);
+}
+
+/* Reference Pitch Toggle */
+.tuner-pitch-toggle {
+    display: flex;
+    background: var(--bg-deep);
+    border-radius: 20px;
+    padding: 3px;
+    border: 1px solid rgba(232, 185, 35, 0.2);
+}
+
+.tuner-pitch-btn {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    border-radius: 17px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tuner-pitch-btn.active {
+    background: linear-gradient(135deg, var(--gold-warm), var(--gold-deep));
+    color: var(--bg-deep);
+    box-shadow: 0 2px 10px var(--glow-soft);
+}
+
+/* Instrument Tabs */
+.tuner-instrument-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.tuner-instrument-tab {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.6rem 1rem;
+    background: var(--bg-deep);
+    border: 2px solid rgba(232, 185, 35, 0.2);
+    color: var(--text-secondary);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.tuner-instrument-tab:hover {
+    border-color: var(--gold-warm);
+    color: var(--text-primary);
+}
+
+.tuner-instrument-tab.active {
+    background: linear-gradient(135deg, var(--gold-warm), var(--gold-deep));
+    border-color: var(--gold-light);
+    color: var(--bg-deep);
+    box-shadow: 0 0 15px var(--glow-soft);
+}
+
+.tuner-instrument-icon {
+    font-size: 1rem;
+}
+
+/* String Tuning Buttons */
+.tuner-strings-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.tuner-strings-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.tuner-string-btn {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    padding: 0.8rem 1rem;
+    background: var(--bg-deep);
+    border: 2px solid rgba(232, 185, 35, 0.25);
+    color: var(--text-secondary);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    min-width: 80px;
+    touch-action: manipulation;
+}
+
+.tuner-string-btn:hover {
+    border-color: var(--gold-warm);
+    color: var(--text-primary);
+}
+
+.tuner-string-btn:active,
+.tuner-string-btn.playing {
+    background: linear-gradient(135deg, var(--gold-warm), var(--gold-deep));
+    border-color: var(--gold-light);
+    color: var(--bg-deep);
+    box-shadow: 0 0 20px var(--glow-gold);
+    transform: scale(0.95);
+}
+
+.tuner-string-note {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.tuner-string-freq {
+    font-size: 0.65rem;
+    opacity: 0.8;
+}
+
+.tuner-string-count {
+    font-size: 0.55rem;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Monochord Specific Layout */
+.tuner-monochord-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+}
+
+.tuner-string-btn.bass-left,
+.tuner-string-btn.bass-right {
+    background: linear-gradient(135deg, var(--bg-elevated), var(--bg-glow));
+}
+
+.tuner-string-btn.bass-left.playing,
+.tuner-string-btn.bass-right.playing {
+    background: linear-gradient(135deg, var(--copper), #c9795a);
+    border-color: var(--copper);
+    box-shadow: 0 0 20px rgba(218, 138, 103, 0.5);
+}
+
+.tuner-string-btn.middle {
+    min-width: 120px;
+}
+
+.tuner-string-btn.middle.playing {
+    background: linear-gradient(135deg, var(--gold-warm), var(--gold-deep));
+}
+
+.tuner-string-divider {
+    width: 2px;
+    height: 50px;
+    background: linear-gradient(to bottom, transparent, var(--gold-deep), transparent);
+    margin: 0 0.3rem;
+}
+
+/* Tampura Layout */
+.tuner-tampura-layout {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.tuner-string-btn.tampura {
+    min-width: 75px;
+}
+
+.tuner-string-btn.tampura.a-string {
+    border-color: rgba(157, 140, 188, 0.4);
+}
+
+.tuner-string-btn.tampura.a-string.playing {
+    background: linear-gradient(135deg, var(--violet-deep), var(--violet-soft));
+    border-color: var(--violet-soft);
+    box-shadow: 0 0 20px var(--glow-violet);
+}
+
+/* Koto Layout */
+.tuner-koto-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.tuner-koto-phase {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tuner-koto-phase-label {
+    font-size: 0.7rem;
+    color: var(--gold-primary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 0.3rem 0.6rem;
+    background: rgba(232, 185, 35, 0.1);
+    border-radius: 10px;
+}
+
+.tuner-koto-strings {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.4rem;
+    width: 100%;
+    max-width: 500px;
+}
+
+.tuner-string-btn.koto-base {
+    min-width: 150px;
+    padding: 1rem 1.5rem;
+}
+
+.tuner-string-btn.koto-base .tuner-string-note {
+    font-size: 1.4rem;
+}
+
+.tuner-string-btn.koto-string {
+    min-width: auto;
+    padding: 0.5rem 0.3rem;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.tuner-string-btn.koto-string .tuner-string-num {
+    font-size: 0.5rem;
+    color: var(--text-muted);
+    opacity: 0.7;
+}
+
+.tuner-string-btn.koto-string .tuner-string-note {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.tuner-string-btn.koto-string .tuner-string-freq {
+    font-size: 0.5rem;
+}
+
+.tuner-string-btn.koto-string.playing .tuner-string-num {
+    color: inherit;
+    opacity: 1;
+}
+
+/* Visual Pitch Detector / Tuner Meter */
+.tuner-meter-section {
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    border: 1px solid rgba(232, 185, 35, 0.1);
+}
+
+.tuner-meter-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.tuner-meter-title {
+    font-size: 0.75rem;
+    color: var(--gold-primary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.tuner-mic-btn {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    background: var(--bg-deep);
+    border: 1px solid rgba(232, 185, 35, 0.25);
+    color: var(--text-secondary);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.tuner-mic-btn:hover {
+    border-color: var(--gold-warm);
+    color: var(--text-primary);
+}
+
+.tuner-mic-btn.active {
+    background: linear-gradient(135deg, var(--teal-deep), var(--teal-soft));
+    border-color: var(--teal-soft);
+    color: var(--text-primary);
+    box-shadow: 0 0 10px rgba(126, 200, 200, 0.3);
+}
+
+.tuner-meter-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.tuner-meter-container.active {
+    opacity: 1;
+}
+
+.tuner-meter-scale {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 300px;
+    padding: 0 0.5rem;
+}
+
+.tuner-meter-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.tuner-meter-label.flat {
+    color: var(--copper);
+}
+
+.tuner-meter-label.center {
+    color: var(--teal-soft);
+}
+
+.tuner-meter-label.sharp {
+    color: var(--violet-soft);
+}
+
+.tuner-meter-track {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    height: 24px;
+    background: var(--bg-deep);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    border: 1px solid rgba(232, 185, 35, 0.15);
+}
+
+.tuner-meter-zone {
+    flex: 1;
+    height: 100%;
+}
+
+.tuner-meter-zone.flat-zone {
+    background: linear-gradient(90deg, rgba(218, 138, 103, 0.3), rgba(218, 138, 103, 0.1));
+}
+
+.tuner-meter-zone.tune-zone {
+    background: linear-gradient(90deg, 
+        rgba(126, 200, 200, 0.1), 
+        rgba(126, 200, 200, 0.3), 
+        rgba(126, 200, 200, 0.1));
+}
+
+.tuner-meter-zone.sharp-zone {
+    background: linear-gradient(90deg, rgba(157, 140, 188, 0.1), rgba(157, 140, 188, 0.3));
+}
+
+.tuner-meter-center {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 100%;
+    background: var(--teal-soft);
+    box-shadow: 0 0 8px var(--teal-soft);
+}
+
+.tuner-meter-needle {
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(180deg, var(--gold-light), var(--gold-warm));
+    border-radius: 2px;
+    box-shadow: 0 0 10px var(--glow-gold);
+    transition: left 0.1s ease-out;
+}
+
+.tuner-meter-needle.flat {
+    background: linear-gradient(180deg, var(--copper), #c9795a);
+    box-shadow: 0 0 10px rgba(218, 138, 103, 0.5);
+}
+
+.tuner-meter-needle.sharp {
+    background: linear-gradient(180deg, var(--violet-soft), var(--violet-deep));
+    box-shadow: 0 0 10px var(--glow-violet);
+}
+
+.tuner-meter-needle.in-tune {
+    background: linear-gradient(180deg, var(--teal-soft), var(--teal-deep));
+    box-shadow: 0 0 15px var(--teal-soft);
+}
+
+.tuner-meter-cents {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+}
+
+.tuner-meter-cents.flat {
+    color: var(--copper);
+}
+
+.tuner-meter-cents.sharp {
+    color: var(--violet-soft);
+}
+
+.tuner-meter-cents.in-tune {
+    color: var(--teal-soft);
+}
+
+.tuner-meter-detected {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.tuner-detected-note {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-warm));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.tuner-detected-freq {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.tuner-meter-target {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.6rem;
+    background: rgba(232, 185, 35, 0.1);
+    border-radius: 8px;
+    margin-top: 0.3rem;
+}
+
+.tuner-target-label {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.tuner-target-note {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--gold-primary);
+}
+
+.tuner-target-freq {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+/* Responsive Koto and Meter */
+@media (max-width: 500px) {
+    .tuner-koto-strings {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.3rem;
+    }
+    
+    .tuner-string-btn.koto-string {
+        padding: 0.4rem 0.2rem;
+    }
+    
+    .tuner-string-btn.koto-string .tuner-string-note {
+        font-size: 0.8rem;
+    }
+    
+    .tuner-string-btn.koto-string .tuner-string-freq {
+        font-size: 0.45rem;
+    }
+    
+    .tuner-meter-track {
+        max-width: 260px;
+    }
+    
+    .tuner-meter-scale {
+        max-width: 260px;
+    }
+    
+    .tuner-meter-label {
+        font-size: 0.5rem;
+    }
+}
+
+/* Tuner Frequency Display */
+.tuner-freq-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(232, 185, 35, 0.1);
+}
+
+.tuner-freq-value {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-warm));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.tuner-freq-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+}
+
+.tuner-playing-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    transition: all 0.2s ease;
+}
+
+.tuner-playing-indicator.active {
+    background: var(--teal-soft);
+    box-shadow: 0 0 15px var(--teal-soft);
+    animation: tunerPulse 1s ease-in-out infinite;
+}
+
+@keyframes tunerPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.7; }
+}
+
+/* Bonus Features Row */
+.tuner-bonus-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.tuner-bonus-btn {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    background: var(--bg-deep);
+    border: 1px solid rgba(232, 185, 35, 0.2);
+    color: var(--text-muted);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.tuner-bonus-btn:hover {
+    border-color: var(--gold-warm);
+    color: var(--text-secondary);
+}
+
+.tuner-bonus-btn.active {
+    background: linear-gradient(135deg, var(--teal-deep), var(--teal-soft));
+    border-color: var(--teal-soft);
+    color: var(--text-primary);
+    box-shadow: 0 0 10px rgba(126, 200, 200, 0.3);
+}
+
+/* Responsive Tuner */
+@media (max-width: 767px) {
+    .tuner-controls-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tuner-select-group {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .tuner-instrument-tabs {
+        gap: 0.35rem;
+    }
+
+    .tuner-instrument-tab {
+        font-size: 0.7rem;
+        padding: 0.5rem 0.8rem;
+    }
+
+    .tuner-monochord-layout {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .tuner-string-divider {
+        width: 60%;
+        height: 2px;
+        background: linear-gradient(to right, transparent, var(--gold-deep), transparent);
+        margin: 0;
+    }
+
+    .tuner-string-btn {
+        min-width: 70px;
+        padding: 0.6rem 0.8rem;
+    }
+
+    .tuner-string-btn.middle {
+        min-width: 100px;
+    }
+
+    .tuner-string-btn.koto {
+        min-width: 130px;
+    }
+
+    .tuner-freq-value {
+        font-size: 1.2rem;
+    }
+
+    .tuner-bonus-row {
+        gap: 0.35rem;
+    }
+
+    .tuner-bonus-btn {
+        font-size: 0.6rem;
+        padding: 0.3rem 0.6rem;
+    }
+}
+
+/* Completion Overlay */
+.completion-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(26, 21, 32, 0.98), rgba(36, 30, 42, 0.95));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s, visibility 0.8s;
+}
+
+.completion-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.completion-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.completion-message {
+    font-family: 'Philosopher', serif;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-weight: 400;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-warm));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+    text-align: center;
+}
+
+.completion-sub {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+/* Wake lock indicator */
+.wake-lock-indicator {
+    position: fixed;
+    top: calc(8px + var(--safe-top));
+    right: calc(8px + var(--safe-right));
+    font-size: 0.6rem;
+    color: var(--teal-soft);
+    opacity: 0;
+    transition: opacity 0.3s;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.wake-lock-indicator.active {
+    opacity: 0.7;
+}
+
+/* iPad & Tablet - All orientations - Live Performance Optimized */
+@media (min-width: 768px) {
+    .container {
+        display: flex;
+        flex-direction: column;
+        padding: calc(0.4rem + var(--safe-top)) calc(0.75rem + var(--safe-right)) calc(0.4rem + var(--safe-bottom)) calc(0.75rem + var(--safe-left));
+        max-width: 100%;
+        gap: 0.5rem;
+    }
+
+    /* Show compact header bar with controls, hide old header/timer on tablets */
+    .header-bar {
+        display: flex;
+    }
+
+    header {
+        display: none;
+    }
+
+    .timer-section {
+        display: none;
+    }
+
+    /* Full width panels */
+    .timeline-section {
+        margin: 0;
+        width: 100%;
+    }
+
+    .free-mode-panel {
+        margin: 0;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .free-mode-panel.visible {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Larger interval buttons grid - 2 rows of 5 for better touch */
+    .interval-buttons {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.6rem;
+        flex-grow: 1;
+    }
+
+    .interval-btn {
+        padding: 1rem 0.5rem;
+        min-height: 80px;
+    }
+
+    .interval-btn-note {
+        font-size: 1.4rem;
+    }
+
+    .interval-btn-freq {
+        font-size: 0.7rem;
+    }
+
+    /* Channel selector inline */
+    .channel-selector {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .channel-btn {
+        padding: 0.5rem 1.25rem;
+        font-size: 0.85rem;
+    }
+
+    .fade-speed-control input[type="range"] {
+        width: 100px;
+    }
+
+    /* Controls section - secondary controls area */
+    .controls-section {
+        margin: 0;
+        width: 100%;
+        padding: 0.75rem;
+    }
+
+    /* Hide primary buttons in controls - they're in header now */
+    .controls-row-buttons {
+        display: none;
+    }
+
+    /* Hide preset select in controls - it's in header now */
+    #presetGroup {
+        display: none;
+    }
+
+    .controls-row {
+        flex-direction: row;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .select-group {
+        max-width: 180px;
+        min-width: 160px;
+    }
+
+    .toggles-row {
+        gap: 1.25rem;
+    }
+
+    /* Vertical Volume Controls for Live Performance */
+    .volume-controls {
+        gap: 1.5rem;
+        padding: 0.5rem 0;
+        justify-content: center;
+        align-items: flex-end;
+    }
+
+    .volume-group {
+        min-width: auto;
+    }
+
+    .volume-group input[type="range"] {
+        width: 50px;
+        height: 140px;
+        writing-mode: vertical-lr;
+        direction: rtl;
+        background: linear-gradient(to top, var(--bg-deep), var(--bg-elevated));
+        border-radius: 25px;
+        border: 1px solid rgba(232, 185, 35, 0.2);
+        box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .volume-group input[type="range"]::-webkit-slider-thumb {
+        width: 40px;
+        height: 40px;
+    }
+
+    .volume-group.volume-master input[type="range"] {
+        width: 60px;
+        height: 160px;
+        background: linear-gradient(to top, var(--bg-deep), rgba(232, 185, 35, 0.1));
+        border-color: rgba(232, 185, 35, 0.35);
+    }
+
+    .volume-group.volume-master input[type="range"]::-webkit-slider-thumb {
+        width: 50px;
+        height: 50px;
+    }
+
+    .freq-display {
+        gap: 3rem;
+        padding: 0.5rem 0;
+    }
+
+    /* Phase cards wider */
+    .phase-cards {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.6rem;
+    }
+
+    .phase-card {
+        padding: 0.6rem;
+    }
+
+    .phase-card-icon {
+        font-size: 1.4rem;
+    }
+
+    .phase-card-name {
+        font-size: 0.7rem;
+    }
+
+    .phase-card-duration {
+        font-size: 0.85rem;
+    }
+
+    .phase-card-guidance {
+        font-size: 0.6rem;
+    }
+
+    /* Effects section on tablets */
+    .effects-section {
+        margin-top: 0.5rem;
+        width: 100%;
+    }
+
+    .effects-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.6rem;
+    }
+
+    .effect-card {
+        padding: 0.6rem;
+    }
+
+    .effect-icon {
+        font-size: 1.3rem;
+    }
+
+    .effect-slider {
+        width: 70px;
+    }
+}
+
+/* iPad Landscape - Live Performance Optimized Layout */
+@media (orientation: landscape) and (min-width: 768px) {
+    .container {
+        padding: calc(0.3rem + var(--safe-top)) calc(0.75rem + var(--safe-right)) calc(0.3rem + var(--safe-bottom)) calc(0.75rem + var(--safe-left));
+        gap: 0.4rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-content: flex-start;
+    }
+
+    .header-bar {
+        width: 100%;
+        padding: 0.4rem 1rem;
+        flex-shrink: 0;
+        order: 1;
+    }
+
+    .timer-compact-display {
+        font-size: 1.8rem;
+    }
+
+    /* Main content area - split layout for live performance */
+    .free-mode-panel {
+        flex: 1 1 60%;
+        min-width: 400px;
+        max-height: calc(100vh - 100px);
+        order: 2;
+        padding: 0.6rem;
+    }
+
+    .controls-section {
+        flex: 0 0 auto;
+        width: auto;
+        min-width: 180px;
+        max-width: 240px;
+        padding: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        max-height: calc(100vh - 100px);
+        order: 3;
+    }
+
+    /* 10 interval buttons in 2 rows in landscape for maximum size */
+    .interval-buttons {
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 0.6rem;
+        flex-grow: 1;
+    }
+
+    .interval-btn {
+        padding: 0.5rem 0.3rem;
+        min-height: 0;
+        height: 100%;
+    }
+
+    .interval-btn-note {
+        font-size: 1.4rem;
+    }
+
+    .interval-btn-freq {
+        font-size: 0.7rem;
+    }
+
+    /* Compact controls in landscape */
+    .controls-row {
+        margin-bottom: 0.35rem;
+    }
+
+    .toggles-row {
+        gap: 0.75rem;
+    }
+
+    .toggle-group {
+        padding: 0.25rem;
+    }
+
+    .toggle-label {
+        font-size: 0.7rem;
+    }
+
+    /* Vertical volume sliders in landscape - side by side */
+    .volume-controls {
+        flex-direction: row;
+        gap: 0.75rem;
+        padding: 0.4rem 0;
+    }
+
+    .volume-group input[type="range"] {
+        width: 50px;
+        height: 110px;
+    }
+
+    .volume-group input[type="range"]::-webkit-slider-thumb {
+        width: 38px;
+        height: 38px;
+    }
+
+    .volume-group.volume-master input[type="range"] {
+        width: 60px;
+        height: 130px;
+    }
+
+    .volume-group.volume-master input[type="range"]::-webkit-slider-thumb {
+        width: 48px;
+        height: 48px;
+    }
+
+    .volume-label {
+        font-size: 0.6rem;
+    }
+
+    .volume-value {
+        font-size: 0.85rem;
+    }
+
+    .freq-display {
+        flex-direction: column;
+        gap: 0.4rem;
+        padding: 0.3rem 0;
+    }
+
+    .freq-channel-label {
+        font-size: 0.55rem;
+    }
+
+    .freq-channel-value {
+        font-size: 1.1rem;
+    }
+
+    .freq-channel-note {
+        font-size: 0.75rem;
+    }
+
+    /* Hide audio status in landscape to save space */
+    .audio-status {
+        display: none;
+    }
+
+    /* Compact free mode header in landscape */
+    .free-mode-header {
+        margin-bottom: 0.4rem;
+        padding-bottom: 0.3rem;
+    }
+
+    .free-mode-title {
+        font-size: 0.75rem;
+    }
+
+    .free-mode-secondary {
+        padding-top: 0.4rem;
+        margin-top: 0.3rem;
+    }
+
+    /* Effects section in landscape - horizontal strip below */
+    .effects-section {
+        width: 100%;
+        order: 4;
+        padding: 0.5rem 0.75rem;
+        margin-top: 0.3rem;
+    }
+
+    .effects-header {
+        margin-bottom: 0.4rem;
+        padding-bottom: 0.3rem;
+    }
+
+    .effects-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem;
+    }
+
+    .effect-card {
+        padding: 0.5rem;
+    }
+
+    .effect-icon {
+        font-size: 1.2rem;
+    }
+
+    .effect-name {
+        font-size: 0.7rem;
+    }
+
+    .effect-desc {
+        display: none;
+    }
+
+    .pulse-visualizer,
+    .breath-visualizer {
+        width: 35px;
+        height: 35px;
+    }
+
+    .pan-visualizer,
+    .swell-visualizer {
+        width: 70px;
+        height: 16px;
+    }
+
+    /* Tuner section in landscape - horizontal strip at bottom */
+    .tuner-section {
+        width: 100%;
+        order: 5;
+        padding: 0.5rem 0.75rem;
+        margin-top: 0.3rem;
+    }
+
+    .tuner-header {
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.3rem;
+    }
+
+    .tuner-title {
+        font-size: 0.75rem;
+    }
+
+    .tuner-subtitle {
+        font-size: 0.55rem;
+    }
+
+    .tuner-content {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    .tuner-controls-row {
+        flex: 0 0 auto;
+        margin-bottom: 0;
+        gap: 0.5rem;
+    }
+
+    .tuner-select-group {
+        min-width: 80px;
+    }
+
+    .tuner-select-label {
+        font-size: 0.5rem;
+    }
+
+    .tuner-select {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.5rem;
+        min-height: 32px;
+    }
+
+    .tuner-pitch-btn {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    .tuner-instrument-tabs {
+        flex: 0 0 auto;
+        margin-bottom: 0;
+        gap: 0.35rem;
+    }
+
+    .tuner-instrument-tab {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.6rem;
+    }
+
+    .tuner-instrument-icon {
+        font-size: 0.85rem;
+    }
+
+    .tuner-strings-container {
+        flex: 1 1 auto;
+    }
+
+    .tuner-monochord-layout {
+        flex-direction: row;
+        gap: 0.25rem;
+        padding: 0.4rem;
+    }
+
+    .tuner-string-btn {
+        min-width: 70px;
+        padding: 0.5rem 0.6rem;
+    }
+
+    .tuner-string-btn.middle {
+        min-width: 100px;
+    }
+
+    .tuner-string-note {
+        font-size: 1rem;
+    }
+
+    .tuner-string-freq {
+        font-size: 0.55rem;
+    }
+
+    .tuner-string-count {
+        font-size: 0.45rem;
+    }
+
+    .tuner-string-divider {
+        width: 2px;
+        height: 40px;
+        margin: 0 0.2rem;
+    }
+
+    .tuner-tampura-layout {
+        gap: 0.5rem;
+    }
+
+    .tuner-string-btn.tampura {
+        min-width: 65px;
+    }
+
+    .tuner-string-btn.koto {
+        min-width: 120px;
+        padding: 0.6rem 1rem;
+    }
+
+    .tuner-freq-display {
+        flex: 0 0 auto;
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .tuner-freq-value {
+        font-size: 1.1rem;
+    }
+
+    .tuner-freq-label {
+        font-size: 0.55rem;
+    }
+
+    .tuner-bonus-row {
+        flex: 0 0 100%;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid rgba(232, 185, 35, 0.1);
+        justify-content: center;
+    }
+
+    .tuner-bonus-btn {
+        font-size: 0.6rem;
+        padding: 0.3rem 0.5rem;
+    }
+
+    /* Koto layout in landscape */
+    .tuner-koto-layout {
+        flex-direction: row;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+    
+    .tuner-koto-phase {
+        flex: 1;
+    }
+    
+    .tuner-koto-phase-label {
+        font-size: 0.55rem;
+    }
+    
+    .tuner-koto-strings {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 0.25rem;
+    }
+    
+    .tuner-string-btn.koto-base {
+        min-width: 100px;
+        padding: 0.6rem 0.8rem;
+    }
+    
+    .tuner-string-btn.koto-string {
+        padding: 0.35rem 0.2rem;
+    }
+    
+    .tuner-string-btn.koto-string .tuner-string-note {
+        font-size: 0.75rem;
+    }
+    
+    .tuner-string-btn.koto-string .tuner-string-freq {
+        font-size: 0.4rem;
+    }
+
+    /* Pitch meter in landscape */
+    .tuner-meter-section {
+        flex: 0 0 100%;
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+    }
+    
+    .tuner-meter-header {
+        margin-bottom: 0.3rem;
+    }
+    
+    .tuner-meter-title {
+        font-size: 0.65rem;
+    }
+    
+    .tuner-meter-track {
+        height: 20px;
+        max-width: 250px;
+    }
+    
+    .tuner-meter-needle {
+        height: 16px;
+    }
+    
+    .tuner-meter-detected {
+        gap: 0.3rem;
+    }
+    
+    .tuner-detected-note {
+        font-size: 1.1rem;
+    }
+    
+    .tuner-detected-freq {
+        font-size: 0.65rem;
+    }
+
+    /* Collapsed state in landscape - more compact */
+    .tuner-section.collapsed {
+        padding: 0.4rem 0.75rem;
+    }
+}
+
+/* Large iPad Pro - Maximum Live Performance Usability */
+@media (min-width: 1024px) {
+    .header-bar {
+        padding: 0.6rem 1.5rem;
+    }
+
+    .header-left h1 {
+        font-size: 1.2rem;
+    }
+
+    .timer-compact-display {
+        font-size: 2.2rem;
+        min-width: 100px;
+    }
+
+    .interval-buttons {
+        gap: 0.9rem;
+    }
+
+    .interval-btn {
+        padding: 1rem 0.5rem;
+        border-radius: 14px;
+        min-height: 90px;
+    }
+
+    .interval-btn-note {
+        font-size: 1.6rem;
+    }
+
+    .interval-btn-freq {
+        font-size: 0.8rem;
+    }
+
+    /* Even larger volume sliders for iPad Pro */
+    .volume-group input[type="range"] {
+        width: 65px;
+        height: 160px;
+    }
+
+    .volume-group input[type="range"]::-webkit-slider-thumb {
+        width: 50px;
+        height: 50px;
+    }
+
+    .volume-group.volume-master input[type="range"] {
+        width: 80px;
+        height: 180px;
+    }
+
+    .volume-group.volume-master input[type="range"]::-webkit-slider-thumb {
+        width: 60px;
+        height: 60px;
+    }
+
+    .phase-card {
+        padding: 0.75rem;
+        border-radius: 10px;
+    }
+
+    .phase-card-icon {
+        font-size: 1.6rem;
+    }
+
+    /* Tuner section on large iPad Pro */
+    .tuner-string-btn {
+        min-width: 85px;
+        padding: 0.6rem 0.8rem;
+    }
+
+    .tuner-string-btn.middle {
+        min-width: 120px;
+    }
+
+    .tuner-string-note {
+        font-size: 1.2rem;
+    }
+
+    .tuner-string-freq {
+        font-size: 0.65rem;
+    }
+
+    .tuner-instrument-tab {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.8rem;
+    }
+
+    .tuner-bonus-btn {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.6rem;
+    }
+    
+    /* Koto on large iPad Pro */
+    .tuner-string-btn.koto-string {
+        padding: 0.5rem 0.3rem;
+    }
+    
+    .tuner-string-btn.koto-string .tuner-string-note {
+        font-size: 0.9rem;
+    }
+    
+    .tuner-string-btn.koto-string .tuner-string-freq {
+        font-size: 0.5rem;
+    }
+    
+    /* Meter on large iPad Pro */
+    .tuner-meter-track {
+        max-width: 280px;
+        height: 24px;
+    }
+}
+
+/* Small screens (phones) */
+@media (max-width: 767px) {
+    .container {
+        display: flex;
+        flex-direction: column;
+        padding: calc(0.75rem + var(--safe-top)) calc(1rem + var(--safe-right)) calc(0.75rem + var(--safe-bottom)) calc(1rem + var(--safe-left));
+    }
+
+    /* On phones, show legacy header/timer, hide compact bar */
+    .header-bar {
+        display: none !important;
+    }
+
+    header {
+        display: block;
+    }
+
+    .timer-section {
+        display: flex;
+    }
+
+    h1 {
+        font-size: 1.4rem;
+    }
+
+    .timer-ring-container {
+        width: min(55vmin, 250px);
+        height: min(55vmin, 250px);
+    }
+
+    .phase-cards {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.25rem;
+    }
+
+    .phase-card {
+        padding: 0.4rem 0.2rem;
+    }
+
+    .phase-card-icon {
+        font-size: 1rem;
+    }
+
+    .phase-card-name {
+        font-size: 0.5rem;
+    }
+
+    .phase-card-duration {
+        font-size: 0.65rem;
+    }
+
+    .controls-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .select-group {
+        max-width: none;
+    }
+
+    .toggles-row {
+        gap: 0.75rem;
+    }
+
+    /* Horizontal volume controls on phones */
+    .volume-controls {
+        gap: 0.75rem;
+        flex-direction: row;
+    }
+
+    .volume-group input[type="range"] {
+        width: 100px;
+        height: 6px;
+        writing-mode: horizontal-tb;
+        direction: ltr;
+    }
+
+    .freq-display {
+        gap: 1.5rem;
+    }
+
+    .interval-buttons {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.35rem;
+    }
+
+    .interval-btn {
+        padding: 0.5rem 0.25rem;
+        min-height: 55px;
+    }
+
+    .interval-btn-note {
+        font-size: 0.85rem;
+    }
+
+    .interval-btn-freq {
+        font-size: 0.5rem;
+    }
+
+    .channel-selector {
+        flex-wrap: wrap;
+        padding: 0.4rem;
+        gap: 0.4rem;
+    }
+
+    .channel-btn {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.7rem;
+        min-height: 36px;
+    }
+
+    .free-mode-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+    }
+
+    .free-mode-secondary {
+        padding-top: 0.4rem;
+        margin-top: 0.4rem;
+    }
+
+    .fade-speed-control {
+        width: 100%;
+        justify-content: center;
+        padding: 0.4rem 0.5rem;
+    }
+
+    .fade-speed-label {
+        font-size: 0.55rem;
+    }
+
+    .fade-speed-control input[type="range"] {
+        width: 90px;
+    }
+
+    .fade-speed-value {
+        font-size: 0.7rem;
+        min-width: 30px;
+    }
+
+    /* Effects section on phones */
+    .effects-section {
+        margin-top: 0.5rem;
+        padding: 0.75rem;
+    }
+
+    .effects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+
+    .effect-card {
+        padding: 0.5rem;
+    }
+
+    .effect-icon {
+        font-size: 1.2rem;
+    }
+
+    .effect-name {
+        font-size: 0.7rem;
+    }
+
+    .effect-desc {
+        font-size: 0.5rem;
+    }
+
+    .effect-slider {
+        width: 50px;
+    }
+
+    .pulse-visualizer,
+    .breath-visualizer {
+        width: 35px;
+        height: 35px;
+    }
+
+    .pan-visualizer,
+    .swell-visualizer {
+        width: 60px;
+        height: 14px;
+    }
+}

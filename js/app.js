@@ -78,17 +78,17 @@ const PRESETS = {
 // Note mapping for interval buttons (display name -> frequency key)
 const NOTE_MAP = {
     'D2': 'D2', 'A2': 'A2', 'D3': 'D3', 'E3': 'E3',
-    'Fâ™¯3': 'F#3', 'G3': 'G3', 'A3': 'A3', 'B3': 'B3',
+    'F#3': 'F#3', 'G3': 'G3', 'A3': 'A3', 'B3': 'B3',
     'D4': 'D4', 'A4': 'A4'
 };
 
 // Phase definitions with percentages
 const PHASES = [
-    { name: 'Settling', icon: 'ðŸŒ±', guidance: 'Begin softly, invite presence', start: 0, end: 0.2 },
-    { name: 'Deepening', icon: 'ðŸŒŠ', guidance: 'Build resonance gradually', start: 0.2, end: 0.4 },
-    { name: 'Peak', icon: 'âœ¨', guidance: 'Full expression, hold space', start: 0.4, end: 0.7 },
-    { name: 'Softening', icon: 'ðŸƒ', guidance: 'Gently reduce intensity', start: 0.7, end: 0.9 },
-    { name: 'Return', icon: 'ðŸ ', guidance: 'Ground the journey home', start: 0.9, end: 1.0 }
+    { name: 'Settling', icon: '🌱', guidance: 'Begin softly, invite presence', start: 0, end: 0.2 },
+    { name: 'Deepening', icon: '🌊', guidance: 'Build resonance gradually', start: 0.2, end: 0.4 },
+    { name: 'Peak', icon: '✨', guidance: 'Full expression, hold space', start: 0.4, end: 0.7 },
+    { name: 'Softening', icon: '🍃', guidance: 'Gently reduce intensity', start: 0.7, end: 0.9 },
+    { name: 'Return', icon: '🏠', guidance: 'Ground the journey home', start: 0.9, end: 1.0 }
 ];
 
 // ============================================
@@ -210,8 +210,19 @@ class AudioEngine {
         }, fadeTime * 1000 + 100);
     }
 
-    setFrequencies(leftFreq, rightFreq, transitionTime = 2) {
-        if (!this.isPlaying || !this.ctx) return;
+    async setFrequencies(leftFreq, rightFreq, transitionTime = 2) {
+        // If not playing but we have a context, try to resume it
+        if (this.ctx && this.ctx.state === 'suspended') {
+            await this.ctx.resume();
+        }
+        
+        // If still not playing or no oscillators, restart the audio
+        if (!this.isPlaying || !this.leftOsc || !this.rightOsc) {
+            await this.start(leftFreq, rightFreq, transitionTime);
+            return;
+        }
+        
+        if (!this.ctx) return;
         const now = this.ctx.currentTime;
         
         if (this.leftOsc) {
@@ -827,7 +838,7 @@ class TunerEngine {
         const transposeSemitones = rootOffset - this.defaultRootOffset; // How many semitones to shift
         
         // Full chromatic scale starting from C
-        const noteNamesFromC = ['C', 'Câ™¯', 'D', 'Dâ™¯', 'E', 'F', 'Fâ™¯', 'G', 'Gâ™¯', 'A', 'Aâ™¯', 'B'];
+        const noteNamesFromC = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
         
         // Convert noteOffset (from A) to semitones from C
         // A is 9 semitones above C
@@ -1025,7 +1036,7 @@ class TunerEngine {
         this.isPlaying = false;
         this.currentFrequency = 0;
         this.playingIndicator.classList.remove('active');
-        this.freqValue.textContent = 'â€”';
+        this.freqValue.textContent = '—';
     }
     
     updateFrequencyDisplay(freq1, freq2 = null) {
@@ -1620,7 +1631,7 @@ class SessionController {
         });
         
         // Preset change handler - shared function
-        const handlePresetChange = (value) => {
+        const handlePresetChange = async (value) => {
             this.currentPreset = value;
             this.isFreeMode = PRESETS[this.currentPreset]?.isFreeMode || false;
             this.updateFreeModeUI();
@@ -1633,7 +1644,7 @@ class SessionController {
             // If in free mode and running, update frequencies immediately
             if (this.isRunning && this.isFreeMode) {
                 const freqs = this.getCurrentFrequencies();
-                this.audio.setFrequencies(freqs.left, freqs.right);
+                await this.audio.setFrequencies(freqs.left, freqs.right);
             }
         };
         
@@ -1655,7 +1666,7 @@ class SessionController {
         
         // Interval buttons
         this.intervalButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', async () => {
                 const note = btn.dataset.note;
                 const freqKey = NOTE_MAP[note];
                 
@@ -1672,7 +1683,7 @@ class SessionController {
                 // If running, update audio immediately with current fade speed
                 if (this.isRunning) {
                     const freqs = this.getCurrentFrequencies();
-                    this.audio.setFrequencies(freqs.left, freqs.right, this.fadeSpeed);
+                    await this.audio.setFrequencies(freqs.left, freqs.right, this.fadeSpeed);
                 }
             });
         });
@@ -1704,13 +1715,13 @@ class SessionController {
             toggle.addEventListener('click', handler);
         };
 
-        handleToggle(this.tuningToggle, (active) => {
+        handleToggle(this.tuningToggle, async (active) => {
             this.use432 = active;
             this.updateFrequencyDisplay();
             this.updateIntervalButtonFrequencies();
             if (this.isRunning) {
                 const freqs = this.getCurrentFrequencies();
-                this.audio.setFrequencies(freqs.left, freqs.right);
+                await this.audio.setFrequencies(freqs.left, freqs.right);
             }
         });
 
@@ -1794,7 +1805,7 @@ class SessionController {
         // Update compact header mode for tablets
         if (this.timerCompactMode) {
             this.timerCompactMode.textContent = this.isFreeMode 
-                ? 'âˆž FREE PLAY' 
+                ? '∞ FREE PLAY' 
                 : PRESETS[this.currentPreset]?.name || 'Journey';
         }
         if (this.timerCompactDisplay) {
@@ -1920,11 +1931,11 @@ class SessionController {
         // Update compact header for tablets
         if (this.headerAudioDot) this.headerAudioDot.classList.add('active');
         if (this.timerCompactStatus) {
-            this.timerCompactStatus.textContent = this.isFreeMode ? 'â™ª Playing' : 'In progress';
+            this.timerCompactStatus.textContent = this.isFreeMode ? '♪ Playing' : 'In progress';
         }
         
         if (this.isFreeMode) {
-            this.phaseName.textContent = 'â™ª Playing';
+            this.phaseName.textContent = '♪ Playing';
             this.phaseGuidance.textContent = 'Tap intervals to change';
         }
         
@@ -1959,7 +1970,7 @@ class SessionController {
         
         this.audioDot.classList.remove('active');
         this.audioStatusText.textContent = this.isFreeMode 
-            ? 'Paused â€¢ ' + this.formatTime(this.elapsed) + ' played'
+            ? 'Paused • ' + this.formatTime(this.elapsed) + ' played'
             : 'Session ended';
         this.breathCircle.classList.remove('active');
         
@@ -2091,10 +2102,10 @@ class SessionController {
         const preset = PRESETS.overtone;
         const stepDuration = this.duration / preset.sequence.length;
         
-        this.overtoneInterval = setInterval(() => {
+        this.overtoneInterval = setInterval(async () => {
             this.overtoneIndex = (this.overtoneIndex + 1) % preset.sequence.length;
             const { left, right } = this.getCurrentFrequencies();
-            this.audio.setFrequencies(left, right);
+            await this.audio.setFrequencies(left, right);
             this.updateFrequencyDisplay();
         }, stepDuration * 1000);
     }

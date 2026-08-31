@@ -1,7 +1,7 @@
 /* Sound Journey Session Leader — service worker.
  * Caches the app shell so an installed copy opens (and plays) with no network.
  * Bump CACHE_VERSION whenever index.html / css / js change. */
-const CACHE_VERSION = 'sj-v1'
+const CACHE_VERSION = 'kotamo-v2'
 const SHELL = [
   './',
   './index.html',

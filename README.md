@@ -1,6 +1,6 @@
-# Sound Journey Session Leader
+# Kotamo — Sound Journey Session Leader
 
-A web-based binaural beat generator and sound healing companion app for the Feeltone Master Monochord KOTAMO.
+A web-based binaural drone, guided-session and tuning companion for the Feeltone Master Monochord KOTAMO. Live at **https://kotamo.app** (Vercel, auto-deploys from `main`); mirror at https://remidz.github.io/Monochord/.
 
 ## Features
 

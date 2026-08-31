@@ -3436,3 +3436,16 @@ input[type="range"]::-webkit-slider-thumb {
         height: 14px;
     }
 }
+
+/* Direction chevrons as SVG: the ◀/▶ text glyphs render as blue emoji squares on iOS. */
+.dir-arrow {
+    display: inline-block;
+    width: 0.62em;
+    height: 0.62em;
+    vertical-align: -0.02em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}

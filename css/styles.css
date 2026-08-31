@@ -60,6 +60,10 @@ html, body {
     overflow: hidden;
 }
 
+/* Pinch-zoom is allowed again (accessibility); this stops double-tap zoom on
+   the pads without locking the viewport. */
+html, body { touch-action: manipulation; }
+
 body {
     font-family: 'Quicksand', sans-serif;
     background: var(--bg-deep);

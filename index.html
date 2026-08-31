@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     
     <!-- iOS Specific Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,6 +13,13 @@
     <meta name="theme-color" content="#1a1520">
     
     <title>Sound Journey Session Leader</title>
+    <meta name="description" content="Binaural drones, guided sound-journey sessions and a KOTAMO monochord tuner — for the Feeltone Master Monochord.">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Philosopher:wght@400;700&family=Quicksand:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
@@ -306,9 +313,9 @@
                     <div class="freq-channel-note" id="freqLeftNote">D3</div>
                 </div>
                 <div class="freq-channel freq-channel-beat">
-                    <div class="freq-channel-label">Binaural Beat</div>
-                    <div class="freq-channel-value" id="binauralBeatValue">71.84 Hz</div>
-                    <div class="freq-channel-note" id="binauralBeatNote">Deep Theta</div>
+                    <div class="freq-channel-label">L / R Interval</div>
+                    <div class="freq-channel-value" id="binauralBeatValue">Perfect Fifth</div>
+                    <div class="freq-channel-note" id="binauralBeatNote">71.84 Hz apart — too wide to beat</div>
                 </div>
                 <div class="freq-channel">
                     <div class="freq-channel-label">Right Channel</div>
@@ -667,5 +674,14 @@
     </div>
 
     <script src="js/app.js"></script>
+    <script>
+        // Offline app shell + installability (Android/desktop). Relative path so it
+        // works both at remidz.github.io/Monochord/ and on a root domain.
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            });
+        }
+    </script>
 </body>
 </html>

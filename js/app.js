@@ -5,6 +5,31 @@
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
               (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
+// ============================================
+// SHARED AUDIO CONTEXT
+// One AudioContext for the whole app. iOS Safari caps the number of live
+// contexts; creating a fresh one per engine/chime can silently kill audio
+// after a few sessions. Everything (session engine, tuner, pitch detector,
+// completion chime) borrows this one.
+// ============================================
+const SharedAudio = {
+    ctx: null,
+    get() {
+        if (!this.ctx) {
+            const Ctor = window.AudioContext || window.webkitAudioContext;
+            this.ctx = new Ctor();
+        }
+        return this.ctx;
+    },
+    async resume() {
+        const ctx = this.get();
+        if (ctx.state !== 'running') {
+            try { await ctx.resume(); } catch (err) { console.log('AudioContext resume failed:', err); }
+        }
+        return ctx;
+    }
+};
+
 let wakeLock = null;
 
 async function requestWakeLock() {
@@ -31,6 +56,8 @@ async function releaseWakeLock() {
 document.addEventListener('visibilitychange', async () => {
     if (document.visibilityState === 'visible' && window.session?.isRunning) {
         await requestWakeLock();
+        // iOS marks the context "interrupted" after a call/alarm — bring it back
+        if (SharedAudio.ctx && SharedAudio.ctx.state !== 'running') await SharedAudio.resume();
     }
 });
 
@@ -116,7 +143,7 @@ class AudioEngine {
         if (this.ctx) return true;
         
         try {
-            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            this.ctx = SharedAudio.get();
             
             if (this.ctx.state === 'suspended') {
                 await this.ctx.resume();
@@ -880,7 +907,7 @@ class TunerEngine {
     
     async ensureAudioContext() {
         if (!this.ctx) {
-            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            this.ctx = SharedAudio.get();
         }
         if (this.ctx.state === 'suspended') {
             await this.ctx.resume();
@@ -1242,7 +1269,7 @@ class TunerEngine {
             
             // Create audio context if needed
             if (!this.ctx) {
-                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                this.ctx = SharedAudio.get();
             }
             if (this.ctx.state === 'suspended') {
                 await this.ctx.resume();
@@ -1873,33 +1900,64 @@ class SessionController {
         document.getElementById('freqRightValue').textContent = right.toFixed(2) + ' Hz';
         document.getElementById('freqRightNote').textContent = rightNote;
         
-        // Calculate and display binaural beat
-        const binauralBeat = Math.abs(right - left);
-        document.getElementById('binauralBeatValue').textContent = binauralBeat.toFixed(2) + ' Hz';
-        
-        // Classify the binaural beat frequency
-        let beatType = '';
-        if (binauralBeat < 4) beatType = 'Delta (Deep Sleep)';
-        else if (binauralBeat < 8) beatType = 'Theta (Meditation)';
-        else if (binauralBeat < 14) beatType = 'Alpha (Relaxed)';
-        else if (binauralBeat < 30) beatType = 'Beta (Alert)';
-        else if (binauralBeat < 100) beatType = 'Gamma (Peak)';
-        else beatType = 'Interval: ' + this.getIntervalName(left, right);
-        
-        document.getElementById('binauralBeatNote').textContent = beatType;
+        // L/R difference. A binaural beat is only perceived when the two ears
+        // differ by roughly < 35-40 Hz; wider than that the brain hears two
+        // tones — a musical interval — not a beat. Label it honestly.
+        const diff = Math.abs(right - left);
+        const labelEl = document.querySelector('.freq-channel-beat .freq-channel-label');
+        const valueEl = document.getElementById('binauralBeatValue');
+        const noteEl = document.getElementById('binauralBeatNote');
+        const BEAT_LIMIT = 40;
+
+        let label, value, note;
+        if (diff < 0.5) {
+            label = 'Left = Right';
+            value = 'Unison';
+            note = 'Same tone in both ears';
+        } else if (diff <= BEAT_LIMIT) {
+            label = 'Binaural Beat';
+            value = diff.toFixed(2) + ' Hz';
+            if (diff < 4) note = 'Delta (Deep Sleep)';
+            else if (diff < 8) note = 'Theta (Meditation)';
+            else if (diff < 14) note = 'Alpha (Relaxed)';
+            else if (diff < 30) note = 'Beta (Alert)';
+            else note = 'Gamma (Peak)';
+        } else {
+            label = 'L / R Interval';
+            value = this.getIntervalName(left, right);
+            note = diff.toFixed(2) + ' Hz apart — too wide to beat';
+        }
+        if (labelEl) labelEl.textContent = label;
+        valueEl.textContent = value;
+        noteEl.textContent = note;
     }
     
     getIntervalName(freq1, freq2) {
-        const ratio = Math.max(freq1, freq2) / Math.min(freq1, freq2);
-        // Common musical intervals
-        if (Math.abs(ratio - 1.5) < 0.02) return 'Perfect Fifth';
-        if (Math.abs(ratio - 2) < 0.02) return 'Octave';
-        if (Math.abs(ratio - 1.33) < 0.02) return 'Perfect Fourth';
-        if (Math.abs(ratio - 1.25) < 0.02) return 'Major Third';
-        if (Math.abs(ratio - 1.125) < 0.02) return 'Major Second';
-        if (Math.abs(ratio - 1.2) < 0.02) return 'Minor Third';
-        if (Math.abs(ratio - 1.67) < 0.02) return 'Major Sixth';
-        return 'Harmonic';
+        let ratio = Math.max(freq1, freq2) / Math.min(freq1, freq2);
+        // Fold compound intervals down into one octave
+        let octaves = 0;
+        while (ratio >= 1.99) { ratio /= 2; octaves++; }
+        const INTERVALS = [
+            [1.0,   'Unison'],
+            [1.067, 'Minor Second'],
+            [1.125, 'Major Second'],
+            [1.2,   'Minor Third'],
+            [1.25,  'Major Third'],
+            [1.333, 'Perfect Fourth'],
+            [1.414, 'Tritone'],
+            [1.5,   'Perfect Fifth'],
+            [1.6,   'Minor Sixth'],
+            [1.667, 'Major Sixth'],
+            [1.778, 'Minor Seventh'],
+            [1.875, 'Major Seventh'],
+        ];
+        let name = 'Harmonic';
+        for (const [r, n] of INTERVALS) {
+            if (Math.abs(ratio - r) < 0.02) { name = n; break; }
+        }
+        if (octaves === 0) return name;
+        if (name === 'Unison') return octaves === 1 ? 'Octave' : `${octaves} Octaves`;
+        return `Octave + ${name}`;
     }
 
     async start() {
@@ -2118,7 +2176,7 @@ class SessionController {
 
     async playCompletionChime() {
         try {
-            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const ctx = SharedAudio.get();
             if (ctx.state === 'suspended') await ctx.resume();
             
             const osc = ctx.createOscillator();

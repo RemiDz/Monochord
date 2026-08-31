@@ -20,13 +20,13 @@ A web-based binaural beat generator and sound healing companion app for the Feel
 ```
 Monochord/
 ├── index.html              # Main HTML structure
+├── manifest.json           # PWA manifest (install on Android / desktop)
+├── sw.js                   # Service worker — offline app shell
 ├── css/
-│   └── styles.css         # All CSS styles (~88KB)
+│   └── styles.css         # All CSS styles
 ├── js/
-│   └── app.js             # All JavaScript logic (~83KB)
-├── 1.jpeg                 # Monochord side photo
-├── 2.jpeg                 # Tampura/Koto side photo
-└── index_backup.html      # Original single-file version (backup)
+│   └── app.js             # All JavaScript logic
+└── icons/                  # App icons (favicon, Android, iOS)
 ```
 
 ## Instrument Tuner
@@ -51,9 +51,9 @@ The app is deployed via GitHub Pages at:
 ## Technical Details
 
 - **Single Page Application**: Pure HTML/CSS/JavaScript (no frameworks)
-- **Web Audio API**: For all sound generation
+- **Web Audio API**: For all sound generation (one shared AudioContext — iOS limits how many can exist)
 - **Responsive Design**: Optimized for iPad (primary), iPhone, and desktop
-- **iOS PWA Support**: Can be added to home screen
+- **Installable PWA**: Add to home screen on iOS, Android and desktop; the app shell works offline
 - **Wake Lock API**: Keeps screen active during sessions
 
 ## Development
@@ -63,8 +63,9 @@ To modify the app:
 1. Edit `css/styles.css` for styling changes
 2. Edit `js/app.js` for functionality changes
 3. Edit `index.html` for structure changes
+4. Bump `CACHE_VERSION` in `sw.js` after changing any of the above so installed copies pick up the new files
 
-The original single-file version is preserved as `index_backup.html`.
+Note on the L/R readout: a binaural beat is only perceived when the two ears differ by less than roughly 35–40 Hz. Wider than that (e.g. D3 + A3, a perfect fifth) the app shows the musical interval instead of a brainwave band.
 
 ## Credits
 
